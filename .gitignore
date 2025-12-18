@@ -1,0 +1,33 @@
+# Godot 4+ specific ignores
+.godot/
+
+# Android/iOS export templates and builds
+/android/
+/ios/
+
+# Imported assets (automatic)
+*.import
+
+# Export builds
+export/
+bin/
+
+# Crash logs
+godot_open_gl_*.txt
+godot_open_gl_*.txt.last
+godot_vulkan_*.txt
+godot_vulkan_*.txt.last
+
+# Mono/C# ignores (if used in future)
+.mono/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.unityproj
+*.dll
+*.pdb
+*,debug
+*,release
