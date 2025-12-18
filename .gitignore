@@ -6,7 +6,7 @@
 /ios/
 
 # Imported assets (automatic)
-*.import
+# *.import
 
 # Export builds
 export/
