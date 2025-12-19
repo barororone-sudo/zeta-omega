@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cfco5frdideba"
+path="res://.godot/imported/coin.obj-d3dd799a0af7f8a1f3fa6f7e8a47c0cc.mesh"
+
+[deps]
+
+files=["res://.godot/imported/coin.obj-d3dd799a0af7f8a1f3fa6f7e8a47c0cc.mesh"]
+
+source_file="res://Assets/3D/Dungeon/KayKit_DungeonRemastered_1.1_FREE/KayKit_DungeonRemastered_1.1_FREE/Assets/obj/coin.obj"
+dest_files=["res://.godot/imported/coin.obj-d3dd799a0af7f8a1f3fa6f7e8a47c0cc.mesh", "res://.godot/imported/coin.obj-d3dd799a0af7f8a1f3fa6f7e8a47c0cc.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

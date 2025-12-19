@@ -1,7 +1,7 @@
 extends Node
+## GameManager - Singleton principal du jeu
+## Gère l'état global du RPG Open World
+## Accessible via: GameManager (autoload)
 
-# Global GameManager
-# Gère l'état global du jeu, les transitions de scènes et les données persistantes.
-
-func _ready():
-	print("GameManager initialized.")
+func _ready() -> void:
+	pass

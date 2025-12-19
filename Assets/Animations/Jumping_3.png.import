@@ -2,14 +2,14 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6k2pp6dkm4w1"
+uid="uid://ow10277otx82"
 path.s3tc="res://.godot/imported/Jumping_3.png-70fc20e23688034c67bdb213aec674f5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "3d288649506add8b14e9f76e9e9361b7"
+"md5": "26f21d572aac83fe09ba788afe28380a"
 }
 
 [deps]

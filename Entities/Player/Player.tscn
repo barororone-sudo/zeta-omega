@@ -1,10 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8j2q4k1l3n5"]
+[gd_scene load_steps=7 format=3 uid="uid://player001"]
 
-[ext_resource type="Script" uid="uid://lhnu2dff1bb5" path="res://Entities/Player/Player.gd" id="1_player"]
-[ext_resource type="PackedScene" path="res://Assets/Animations/Sword And Shield Idle.fbx" id="2_hero"]
+[ext_resource type="Script" path="res://Entities/Player/Player.gd" id="1_player"]
+[ext_resource type="PackedScene" path="res://Assets/Animations/hero.fbx" id="2_hero"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_main"]
+radius = 0.4
 height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_debug"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_debug"]
+transparency = 1
+albedo_color = Color(1, 0.4, 0.4, 0.1)
+
+[sub_resource type="Environment" id="Environment_cam"]
+background_mode = 1
+background_color = Color(0.1, 0.1, 0.15, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_player")
@@ -15,35 +30,23 @@ shape = SubResource("CapsuleShape3D_main")
 
 [node name="Visuals" type="Node3D" parent="."]
 
-[node name="Hero" parent="Visuals" instance=ExtResource("2_hero")]
+[node name="DebugMesh" type="MeshInstance3D" parent="Visuals"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_debug")
+surface_material_override/0 = SubResource("StandardMaterial3D_debug")
+
+[node name="HeroModel" parent="Visuals" instance=ExtResource("2_hero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07193005, 0, 0.12935567)
 spring_length = 3.0
+margin = 0.2
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
-transform = Transform3D(0.9258442, 0, 0.37790543, 0, 1, 0, -0.37790543, 0, 0.9258442, 0, 0, 0)
-
-[node name="InteractionRay" type="RayCast3D" parent="CameraPivot/SpringArm3D/Camera3D"]
-target_position = Vector3(0, 0, -2.5)
-
-[node name="InteractionUI" type="CanvasLayer" parent="."]
-
-[node name="Label" type="Label" parent="InteractionUI"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "[F] Interagir"
-horizontal_alignment = 1
-vertical_alignment = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+environment = SubResource("Environment_cam")
+current = true

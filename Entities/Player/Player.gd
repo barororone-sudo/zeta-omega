@@ -1,236 +1,282 @@
 extends CharacterBody3D
+class_name Player
 
-# --- CONFIGURATION ---
-@export var speed: float = 5.0
-@export var jump_velocity: float = 4.5
+## Player Controller - ZETA OMEGA
+## Gère Mouvement, Attaque, Saut et Chargement Dynamique d'Animations
+
+# === EXPORT VARIABLES ===
+@export_group("Movement")
+@export var move_speed: float = 5.0
+@export var acceleration: float = 10.0
+@export var rotation_speed: float = 10.0
+@export var gravity: float = 20.0
+@export var jump_force: float = 8.0
+
+@export_group("Camera")
 @export var mouse_sensitivity: float = 0.003
-@export var gravity: float = 9.8
 
-# --- NODES ---
-@onready var visuals: Node3D = $Visuals
+# === NODES ===
 @onready var camera_pivot: Node3D = $CameraPivot
-
-# --- INTERNAL ---
-var skeleton: Skeleton3D = null
+@onready var visuals: Node3D = $Visuals
+# Ces références seront trouvées dynamiquement
 var animation_player: AnimationPlayer = null
-var head_bone_idx: int = -1
-var neck_bone_idx: int = -1
+var skeleton: Skeleton3D = null
+
+# === INTERNAL STATE ===
+var is_attacking: bool = false
+var _head_bone_idx: int = -1
+var _neck_bone_idx: int = -1
+
+# === ANIMATION PATHS ===
+const ANIM_PATHS = {
+	"Idle": "res://Assets/Animations/Sword_And_Shield_Idle.fbx",
+	"Run": "res://Assets/Animations/Sword_And_Shield_Run.fbx",
+	"Walk": "res://Assets/Animations/Sword_And_Shield_Walk.fbx",
+	"Jump": "res://Assets/Animations/Jumping.fbx",
+	"Attack": "res://Assets/Animations/Sword_And_Shield_Slash.fbx"
+}
 
 func _ready() -> void:
+	# 1. SETUP MOUSE
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	# 1. SETUP ANIMATIONS (Injection + Finding Player)
-	_setup_animations()
+	# 2. SETUP INPUTS (AUTO-CONFIG)
+	_setup_inputs_automatically()
 	
-	# 2. SETUP SKELETON (For Head Spin Fix)
-	skeleton = find_skeleton(visuals)
+	# 3. FIND NODES
+	_find_animation_nodes()
+	
+	# 4. LOAD ANIMATIONS & SETUP BONES
 	if skeleton:
-		print("SKELETON FOUND: ", skeleton.name)
-		# Rechercher les os de la tête et du cou
-		# On cherche "Head" ou "mixamorig:Head" (sensible à la casse parfois)
-		head_bone_idx = _find_bone_fuzzy(skeleton, "Head")
-		neck_bone_idx = _find_bone_fuzzy(skeleton, "Neck")
-		print("Head Index: ", head_bone_idx, " Neck Index: ", neck_bone_idx)
-	else:
-		print("CRITICAL: SKELETON NOT FOUND !")
-
-func _process(delta: float) -> void:
-	# --- 3. CORRECTION TETE (HEAD SPIN FIX) ---
-	# Force la rotation à 0 APRES l'animation
-	if skeleton:
-		if head_bone_idx != -1:
-			skeleton.set_bone_pose_rotation(head_bone_idx, Quaternion.IDENTITY)
-		if neck_bone_idx != -1:
-			skeleton.set_bone_pose_rotation(neck_bone_idx, Quaternion.IDENTITY)
-
-	# DEBUG UI
-	_update_debug_ui()
-
-func _physics_process(delta: float) -> void:
-	# Add gravity
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-
-	# Handle Jump
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = jump_velocity
-
-	# --- 1. INPUTS PAR DEFAUT (ROBUSTE) ---
-	# On utilise ui_left/right/up/down pour être sûr à 100% que ça marche
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+		_setup_bones()
 	
-	# DEBUG: Pour vérifier si le clavier marche
-	if input_dir.length() > 0:
-		# print("Input reçu : ", input_dir) # Uncomment for spam
-		pass
+	if animation_player:
+		_load_animations_from_files()
+		_setup_animation_signals()
 
-	# --- 2. MOUVEMENT RELATIF A LA CAMERA ---
-	var direction := Vector3.ZERO
-	if input_dir != Vector2.ZERO:
-		# On prend la direction "devant" de la caméra (Basis Z) et "droite" (Basis X)
-		# On ignore la rotation Y de la caméra pour ne pas "voler" vers le ciel
-		var cam_basis = camera_pivot.global_transform.basis
-		direction = (cam_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		direction.y = 0 # Force le mouvement au sol
-		direction = direction.normalized()
+func _setup_inputs_automatically() -> void:
+	# Ajoute l'action "attack" si elle n'existe pas
+	if not InputMap.has_action("attack"):
+		InputMap.add_action("attack")
+		var ev = InputEventMouseButton.new()
+		ev.button_index = MOUSE_BUTTON_LEFT
+		ev.pressed = true
+		InputMap.action_add_event("attack", ev)
+		print("✅ Input 'attack' créé automatiquement (Clic Gauche)")
+
+func _setup_bones() -> void:
+	# Trouve les os pour le fix Mixamo
+	_head_bone_idx = skeleton.find_bone("mixamorig_Head")
+	_neck_bone_idx = skeleton.find_bone("mixamorig_Neck")
+	if _head_bone_idx == -1: _head_bone_idx = skeleton.find_bone("Head")
+	if _neck_bone_idx == -1: _neck_bone_idx = skeleton.find_bone("Neck")
+
+func _setup_animation_signals() -> void:
+	# Connecte le signal de fin d'animation
+	if not animation_player.animation_finished.is_connected(_on_animation_finished):
+		animation_player.animation_finished.connect(_on_animation_finished)
 	
-	if direction:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
-		
-		# Rotation fluide du personnage
-		var target_rot_y = atan2(velocity.x, velocity.z)
-		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot_y, 0.15)
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
+	# Config Attack Loop Mode = NONE
+	if animation_player.has_animation("Attack"):
+		var attack_anim = animation_player.get_animation("Attack")
+		attack_anim.loop_mode = Animation.LOOP_NONE
+		print("✅ Mode boucle 'Attack' forcé à NONE")
 
-	move_and_slide()
-	
-	# Gestion Animations de base
-	_handle_movement_animation(velocity.length())
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			get_tree().quit()
-			
-	if event is InputEventMouseButton and event.pressed:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		camera_pivot.rotate_y(-event.relative.x * mouse_sensitivity)
-		var new_rotation_x = camera_pivot.rotation.x - (event.relative.y * mouse_sensitivity)
-		camera_pivot.rotation.x = clamp(new_rotation_x, deg_to_rad(-90), deg_to_rad(30))
-		camera_pivot.orthonormalize()
 
-# --- HELPERS ---
+	if event.is_action_pressed("ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
 
-func find_skeleton(node: Node) -> Skeleton3D:
-	if node is Skeleton3D:
-		return node
-	for child in node.get_children():
-		var s = find_skeleton(child)
-		if s: return s
-	return null
-
-func find_animation_player(node: Node) -> AnimationPlayer:
-	if node is AnimationPlayer:
-		return node
-	for child in node.get_children():
-		var ap = find_animation_player(child)
-		if ap: return ap
-	return null
-
-func _find_bone_fuzzy(skel: Skeleton3D, bone_name: String) -> int:
-	# Cherche Exact, puis Mixamo prefix, puis contains
-	var idx = skel.find_bone(bone_name)
-	if idx != -1: return idx
+func _physics_process(delta: float) -> void:
+	# 1. GRAVITY
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	else:
+		velocity.y = -0.1 # Petite force vers le bas pour garder le contact au sol
 	
-	idx = skel.find_bone("mixamorig:" + bone_name)
-	if idx != -1: return idx
+	# 2. JUMP
+	if is_on_floor() and Input.is_action_just_pressed("ui_accept") and not is_attacking:
+		print("🚀 SAUT DÉCLENCHÉ PAR TOUCHE !")
+		velocity.y = jump_force
+		# Lance l'animation TOUT DE SUITE pour 0 délai
+		if animation_player and animation_player.has_animation("Jump"):
+			animation_player.play("Jump", 0.05) # Transition quasi-instantanée
+	if is_on_floor() and Input.is_action_just_pressed("attack") and not is_attacking:
+		_start_attack()
 	
-	idx = skel.find_bone("Mixamorig:" + bone_name)
-	if idx != -1: return idx
+	# 4. MOVEMENT
+	if is_attacking:
+		# Stop movement during attack
+		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
+		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
+	else:
+		# Standard Movement
+		var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+		var direction := Vector3.ZERO
+		
+		# Fallback to UI inputs if custom ones failing (just in case)
+		if input_dir == Vector2.ZERO:
+			input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+			
+		if input_dir != Vector2.ZERO:
+			var cam_basis = camera_pivot.global_basis
+			var forward = -cam_basis.z
+			var right = cam_basis.x
+			forward.y = 0; right.y = 0
+			forward = forward.normalized(); right = right.normalized()
+			
+			direction = (forward * -input_dir.y + right * input_dir.x).normalized()
+		
+		if direction.length() > 0.01:
+			velocity.x = lerp(velocity.x, direction.x * move_speed, acceleration * delta)
+			velocity.z = lerp(velocity.z, direction.z * move_speed, acceleration * delta)
+			var target_rot = atan2(direction.x, direction.z)
+			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, rotation_speed * delta)
+		else:
+			velocity.x = lerp(velocity.x, 0.0, acceleration * delta)
+			velocity.z = lerp(velocity.z, 0.0, acceleration * delta)
 	
-	# Recherche brute (parcours tous les os)
-	for i in range(skel.get_bone_count()):
-		var bname = skel.get_bone_name(i)
-		if bone_name in bname:
-			return i
-	return -1
+	move_and_slide()
+	
+	# 5. ANIM UPDATE
+	_update_animations()
 
-func _handle_movement_animation(speed_len: float) -> void:
+
+
+# === COMBO VARIABLES ===
+var combo_step: int = 0 # 0=None, 1=Hit1, 2=Hit2, 3=Hit3
+var next_attack_queued: bool = false
+const COMBO_TIMINGS = [1.2, 2.4, 3.6] # Fin théorique de chaque coup
+
+func _start_attack() -> void:
+	if not animation_player or not animation_player.has_animation("Attack"): return
+	
+	if not is_attacking:
+		# Premier coup
+		print("⚔️ COMBO 1 START")
+		is_attacking = true
+		combo_step = 1
+		velocity = Vector3.ZERO
+		animation_player.play("Attack", 0.1)
+		animation_player.seek(0.0, true) # Force début
+	else:
+		# On essaie d'enchaîner
+		if combo_step < 3:
+			print("⚔️ COMBO QUEUED (Next step: ", combo_step + 1, ")")
+			next_attack_queued = true
+
+var _debug_timer: float = 0.0
+func _process(delta: float) -> void:
+	# 1. GESTION COMBO
+	if is_attacking and animation_player.current_animation == "Attack":
+		var t = animation_player.current_animation_position
+		
+		# Fin du Coup 1 -> Vers Coup 2 ?
+		if combo_step == 1 and t >= 1.2:
+			if next_attack_queued:
+				print("⚔️ COMBO 2 EXECUTE")
+				combo_step = 2
+				next_attack_queued = false
+			else:
+				print("⚔️ COMBO 1 END")
+				_stop_attack()
+				
+		# Fin du Coup 2 -> Vers Coup 3 ?
+		elif combo_step == 2 and t >= 2.4:
+			if next_attack_queued:
+				print("⚔️ COMBO 3 EXECUTE")
+				combo_step = 3
+				next_attack_queued = false
+			else:
+				print("⚔️ COMBO 2 END")
+				_stop_attack()
+				
+	# 2. DEBUG Logger
+	_debug_timer += delta
+	if _debug_timer > 1.0:
+		_debug_timer = 0.0
+		var current_anim = "None"
+		if animation_player: current_anim = animation_player.current_animation
+		# print("🔍 DEBUG: OnFloor=", is_on_floor(), " VelY=", snapped(velocity.y, 0.01), " Anim=", current_anim)
+
+	# 3. FIX MIXAMO HEAD
+	if skeleton:
+		if _head_bone_idx != -1: skeleton.set_bone_pose_rotation(_head_bone_idx, Quaternion.IDENTITY)
+		if _neck_bone_idx != -1: skeleton.set_bone_pose_rotation(_neck_bone_idx, Quaternion.IDENTITY)
+
+func _stop_attack() -> void:
+	is_attacking = false
+	combo_step = 0
+	next_attack_queued = false
+	animation_player.stop() # Arrêt immédiat pour passer à Idle/Run
+
+func _on_animation_finished(anim_name: String) -> void:
+	if anim_name == "Attack":
+		_stop_attack()
+
+func _update_animations() -> void:
 	if not animation_player: return
 	
-	var anim_to_play = "Idle"
-	if speed_len > 0.1:
-		anim_to_play = "Run"
-	
-	# Fuzzy play logic
-	if animation_player.has_animation(anim_to_play):
-		if animation_player.current_animation != anim_to_play:
-			animation_player.play(anim_to_play, 0.2)
-	else:
-		# Fallback: Play ANYTHING active if standard names involve
-		# This handles the "mixamo.com" vs "Run" issue automatically
-		_play_any_containing(anim_to_play)
-
-func _play_any_containing(partial_name: String) -> void:
-	if animation_player.current_animation.to_lower().contains(partial_name.to_lower()):
-		return # Already playing something relevant
+	# PRIORITY 1: ATTACK
+	if is_attacking:
+		if animation_player.current_animation != "Attack":
+			animation_player.play("Attack")
+		return
 		
-	for anim in animation_player.get_animation_list():
-		if partial_name.to_lower() in anim.to_lower():
-			animation_player.play(anim, 0.2)
-			return
+	# PRIORITY 2: JUMP / FALL
+	if not is_on_floor():
+		if animation_player.has_animation("Jump"):
+			if animation_player.current_animation != "Jump":
+				animation_player.play("Jump", 0.3)
+		return
+	
+	# PRIORITY 3: RUN / WALK / IDLE
+	var h_speed = Vector2(velocity.x, velocity.z).length()
+	var target_anim = "Idle"
+	
+	if h_speed > 3.0: target_anim = "Run"
+	elif h_speed > 0.1: target_anim = "Walk"
+	
+	if animation_player.has_animation(target_anim):
+		if animation_player.current_animation != target_anim:
+			animation_player.play(target_anim, 0.2)
 
-func _setup_animations() -> void:
-	# 1. Injecter les fichiers externes (Run.fbx etc)
-	_inject_external_animations()
-	
-	# 2. Trouver l'anim player final
-	animation_player = find_animation_player(self)
-	
-	# 3. Looping
-	if animation_player:
-		for anim_name in animation_player.get_animation_list():
-			var anim = animation_player.get_animation(anim_name)
-			var al = anim_name.to_lower()
-			if "run" in al or "idle" in al or "walk" in al:
-				anim.loop_mode = Animation.LOOP_LINEAR
+# === ANIMATION LOADER (PRESERVED) ===
+func _load_animations_from_files() -> void:
+	for anim_name in ANIM_PATHS:
+		_load_single_animation(anim_name, ANIM_PATHS[anim_name])
 
-func _inject_external_animations() -> void:
-	var anims_to_load = {
-		"Run": "res://Assets/Animations/Sword And Shield Run.fbx",
-		"Idle": "res://Assets/Animations/Sword And Shield Idle.fbx",
-		"Jump": "res://Assets/Animations/Jumping.fbx"
-	}
-	
-	var target = find_animation_player(self)
-	if not target: return
-	
-	var library = target.get_animation_library("")
-	if not library:
-		library = AnimationLibrary.new()
-		target.add_animation_library("", library)
-	
-	var skeleton_path = NodePath("")
-	if skeleton:
-		skeleton_path = target.get_parent().get_path_to(skeleton)
+func _load_single_animation(target_name: String, path: String) -> void:
+	var packed = load(path)
+	if not packed: return
+	var instance = packed.instantiate()
+	var ext_player = _find_node_recursive(instance, "AnimationPlayer")
+	if ext_player:
+		var list = ext_player.get_animation_list()
+		if list.size() > 0:
+			var anim_resource = ext_player.get_animation(list[0])
+			var source_anim_name = list[0] # Get the actual animation name from the FBX
+			
+			# FORCE LOOP MODES
+			if target_name in ["Idle", "Run", "Walk"]: 
+				anim_resource.loop_mode = Animation.LOOP_LINEAR
+			else:
+				anim_resource.loop_mode = Animation.LOOP_NONE
+			
+			if not animation_player.has_animation(target_name):
+				animation_player.get_animation_library("").add_animation(target_name, anim_resource)
+				print("✅ Animation ajoutée : " + target_name + " (source: " + source_anim_name + ") | Durée: " + str(anim_resource.length))
+	instance.queue_free()
 
-	for key in anims_to_load:
-		var path = anims_to_load[key]
-		if ResourceLoader.exists(path):
-			var packed = load(path)
-			var tmp = packed.instantiate()
-			var tmp_ap = find_animation_player(tmp)
-			if tmp_ap and tmp_ap.get_animation_list().size() > 0:
-				var anim = tmp_ap.get_animation(tmp_ap.get_animation_list()[0]).duplicate()
-				anim.loop_mode = Animation.LOOP_LINEAR
-				
-				# Retargeting simple
-				if skeleton:
-					for i in range(anim.get_track_count()):
-						var track_path = str(anim.track_get_path(i))
-						# Fix Bone Names
-						if ":" in track_path:
-							var parts = track_path.split(":")
-							var bname = parts[1].replace("Mixamorig:", "").replace("mixamorig:", "")
-							anim.track_set_path(i, str(skeleton_path) + ":" + bname)
-				
-				library.add_animation(key, anim)
-			tmp.queue_free()
+func _find_animation_nodes() -> void:
+	animation_player = _find_node_recursive(visuals, "AnimationPlayer")
+	skeleton = _find_node_recursive(visuals, "Skeleton3D")
 
-func _update_debug_ui():
-	var lbl = get_node_or_null("DebugStats")
-	if not lbl:
-		lbl = Label.new()
-		lbl.name = "DebugStats"
-		add_child(lbl)
-		lbl.position = Vector2(10,10)
-	
-	var input = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	lbl.text = "In: %s\nVel: %.1f\nHeadIdx: %d" % [input, velocity.length(), head_bone_idx]
+func _find_node_recursive(root: Node, type_name: String) -> Node:
+	if root.get_class() == type_name: return root
+	for c in root.get_children():
+		var f = _find_node_recursive(c, type_name)
+		if f: return f
+	return null
