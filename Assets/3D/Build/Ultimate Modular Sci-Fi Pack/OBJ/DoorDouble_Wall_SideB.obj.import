@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bx1o2vkmlhi0q"
+path="res://.godot/imported/DoorDouble_Wall_SideB.obj-e4c2941c3760ca6193d9f7883f49f527.mesh"
+
+[deps]
+
+files=["res://.godot/imported/DoorDouble_Wall_SideB.obj-e4c2941c3760ca6193d9f7883f49f527.mesh"]
+
+source_file="res://Assets/3D/Build/Ultimate Modular Sci-Fi Pack/OBJ/DoorDouble_Wall_SideB.obj"
+dest_files=["res://.godot/imported/DoorDouble_Wall_SideB.obj-e4c2941c3760ca6193d9f7883f49f527.mesh", "res://.godot/imported/DoorDouble_Wall_SideB.obj-e4c2941c3760ca6193d9f7883f49f527.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

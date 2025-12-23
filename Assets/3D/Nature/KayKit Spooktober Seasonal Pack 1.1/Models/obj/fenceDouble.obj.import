@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cc76recvyatvt"
+path="res://.godot/imported/fenceDouble.obj-8effed1476830a5fa617b87fc0b3621c.mesh"
+
+[deps]
+
+files=["res://.godot/imported/fenceDouble.obj-8effed1476830a5fa617b87fc0b3621c.mesh"]
+
+source_file="res://Assets/3D/Nature/KayKit Spooktober Seasonal Pack 1.1/Models/obj/fenceDouble.obj"
+dest_files=["res://.godot/imported/fenceDouble.obj-8effed1476830a5fa617b87fc0b3621c.mesh", "res://.godot/imported/fenceDouble.obj-8effed1476830a5fa617b87fc0b3621c.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

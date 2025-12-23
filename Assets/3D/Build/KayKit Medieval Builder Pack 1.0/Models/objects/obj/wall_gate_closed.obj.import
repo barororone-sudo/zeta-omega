@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dewny30sps052"
+path="res://.godot/imported/wall_gate_closed.obj-503b5b5f70222393d23a67b626bc3f8b.mesh"
+
+[deps]
+
+files=["res://.godot/imported/wall_gate_closed.obj-503b5b5f70222393d23a67b626bc3f8b.mesh"]
+
+source_file="res://Assets/3D/Build/KayKit Medieval Builder Pack 1.0/Models/objects/obj/wall_gate_closed.obj"
+dest_files=["res://.godot/imported/wall_gate_closed.obj-503b5b5f70222393d23a67b626bc3f8b.mesh", "res://.godot/imported/wall_gate_closed.obj-503b5b5f70222393d23a67b626bc3f8b.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

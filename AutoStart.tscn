@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://utostart001"]
+
+[ext_resource type="PackedScene" uid="uid://gameworld001" path="res://GameWorld.tscn" id="1_world"]
+[ext_resource type="Script" uid="uid://ccmpxu2fd8513" path="res://Tools/SafeGenerator.gd" id="2_safe_gen"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gen"]
+sky_top_color = Color(0.35, 0.65, 0.95, 1)
+sky_horizon_color = Color(0.65, 0.85, 0.95, 1)
+ground_bottom_color = Color(0.12, 0.12, 0.12, 1)
+
+[sub_resource type="Sky" id="Sky_gen"]
+sky_material = SubResource("ProceduralSkyMaterial_gen")
+
+[sub_resource type="Environment" id="Environment_gen"]
+background_mode = 2
+sky = SubResource("Sky_gen")
+ambient_light_source = 3
+ambient_light_sky_contribution = 0.5
+tonemap_mode = 2
+ssao_enabled = true
+
+[node name="AutoStart" type="Node"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gen")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 100, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="GameWorld" parent="." instance=ExtResource("1_world")]
+
+[node name="WorldGenerator" type="Node" parent="."]
+script = ExtResource("2_safe_gen")
