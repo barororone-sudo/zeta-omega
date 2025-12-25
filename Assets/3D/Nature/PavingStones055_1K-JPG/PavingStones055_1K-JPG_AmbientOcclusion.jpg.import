@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpwjji0ar1q26"
 path.s3tc="res://.godot/imported/PavingStones055_1K-JPG_AmbientOcclusion.jpg-fc24d2716d11a41ea41a354cdab3ecfe.s3tc.ctex"
+path.etc2="res://.godot/imported/PavingStones055_1K-JPG_AmbientOcclusion.jpg-fc24d2716d11a41ea41a354cdab3ecfe.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Assets/3D/Nature/PavingStones055_1K-JPG/PavingStones055_1K-JPG_AmbientOcclusion.jpg"
-dest_files=["res://.godot/imported/PavingStones055_1K-JPG_AmbientOcclusion.jpg-fc24d2716d11a41ea41a354cdab3ecfe.s3tc.ctex"]
+dest_files=["res://.godot/imported/PavingStones055_1K-JPG_AmbientOcclusion.jpg-fc24d2716d11a41ea41a354cdab3ecfe.s3tc.ctex", "res://.godot/imported/PavingStones055_1K-JPG_AmbientOcclusion.jpg-fc24d2716d11a41ea41a354cdab3ecfe.etc2.ctex"]
 
 [params]
 

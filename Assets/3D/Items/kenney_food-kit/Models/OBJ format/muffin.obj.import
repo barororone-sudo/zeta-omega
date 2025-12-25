@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dn4wlvcqdn46q"
+path="res://.godot/imported/muffin.obj-4fedec3a8c551bad114af36bd827008e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/muffin.obj-4fedec3a8c551bad114af36bd827008e.mesh"]
+
+source_file="res://Assets/3D/Items/kenney_food-kit/Models/OBJ format/muffin.obj"
+dest_files=["res://.godot/imported/muffin.obj-4fedec3a8c551bad114af36bd827008e.mesh", "res://.godot/imported/muffin.obj-4fedec3a8c551bad114af36bd827008e.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

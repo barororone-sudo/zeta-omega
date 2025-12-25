@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://mac01oao5s6i"
 path.s3tc="res://.godot/imported/Lava004_1K-JPG_Roughness.jpg-8362f54832e9642ab98ac5f3b5b98d25.s3tc.ctex"
+path.etc2="res://.godot/imported/Lava004_1K-JPG_Roughness.jpg-8362f54832e9642ab98ac5f3b5b98d25.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Assets/3D/Nature/Lava004_1K-JPG/Lava004_1K-JPG_Roughness.jpg"
-dest_files=["res://.godot/imported/Lava004_1K-JPG_Roughness.jpg-8362f54832e9642ab98ac5f3b5b98d25.s3tc.ctex"]
+dest_files=["res://.godot/imported/Lava004_1K-JPG_Roughness.jpg-8362f54832e9642ab98ac5f3b5b98d25.s3tc.ctex", "res://.godot/imported/Lava004_1K-JPG_Roughness.jpg-8362f54832e9642ab98ac5f3b5b98d25.etc2.ctex"]
 
 [params]
 

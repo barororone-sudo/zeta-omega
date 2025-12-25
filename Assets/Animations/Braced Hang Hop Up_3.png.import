@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://evov31tc074f"
 path.s3tc="res://.godot/imported/Braced Hang Hop Up_3.png-4b3819edd2dbf16835ade4a61c6418b8.s3tc.ctex"
+path.etc2="res://.godot/imported/Braced Hang Hop Up_3.png-4b3819edd2dbf16835ade4a61c6418b8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/Braced Hang Hop Up_3.png"
-dest_files=["res://.godot/imported/Braced Hang Hop Up_3.png-4b3819edd2dbf16835ade4a61c6418b8.s3tc.ctex"]
+dest_files=["res://.godot/imported/Braced Hang Hop Up_3.png-4b3819edd2dbf16835ade4a61c6418b8.s3tc.ctex", "res://.godot/imported/Braced Hang Hop Up_3.png-4b3819edd2dbf16835ade4a61c6418b8.etc2.ctex"]
 
 [params]
 

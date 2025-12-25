@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b6ymawhya5lhm"
 path.s3tc="res://.godot/imported/Braced Hang Shimmy (1)_0.png-4d54fb76ca4a7007d2dc5b006100b56f.s3tc.ctex"
+path.etc2="res://.godot/imported/Braced Hang Shimmy (1)_0.png-4d54fb76ca4a7007d2dc5b006100b56f.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/Braced Hang Shimmy (1)_0.png"
-dest_files=["res://.godot/imported/Braced Hang Shimmy (1)_0.png-4d54fb76ca4a7007d2dc5b006100b56f.s3tc.ctex"]
+dest_files=["res://.godot/imported/Braced Hang Shimmy (1)_0.png-4d54fb76ca4a7007d2dc5b006100b56f.s3tc.ctex", "res://.godot/imported/Braced Hang Shimmy (1)_0.png-4d54fb76ca4a7007d2dc5b006100b56f.etc2.ctex"]
 
 [params]
 

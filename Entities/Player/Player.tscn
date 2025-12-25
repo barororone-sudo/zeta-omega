@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://Entities/Player/Player.gd" id="1_player"]
 [ext_resource type="PackedScene" path="res://Assets/Animations/hero.fbx" id="2_hero"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_pc3d"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="4_pchost"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_main"]
 radius = 0.4
@@ -15,11 +17,7 @@ height = 1.8
 transparency = 1
 albedo_color = Color(1, 0.4, 0.4, 0.1)
 
-[sub_resource type="Environment" id="Environment_cam"]
-background_mode = 1
-background_color = Color(0.1, 0.1, 0.15, 1)
-ambient_light_source = 2
-ambient_light_color = Color(0.5, 0.5, 0.5, 1)
+
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -44,12 +42,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
-collision_mask = 1
-spring_length = 4.0
-margin = 0.5
-
-[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
-environment = SubResource("Environment_cam")
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 4)
 current = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D"]
+script = ExtResource("4_pchost")
+
+[node name="PhantomCamera3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 4)
+script = ExtResource("3_pc3d")
+priority = 20
+follow_mode = 6
+follow_target = NodePath("../CameraPivot")

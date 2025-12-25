@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ydn0lomjm88w"
+path="res://.godot/imported/cooking-knife.obj-028df7b034fd26500037ea161a4dbef0.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cooking-knife.obj-028df7b034fd26500037ea161a4dbef0.mesh"]
+
+source_file="res://Assets/3D/Items/kenney_food-kit/Models/OBJ format/cooking-knife.obj"
+dest_files=["res://.godot/imported/cooking-knife.obj-028df7b034fd26500037ea161a4dbef0.mesh", "res://.godot/imported/cooking-knife.obj-028df7b034fd26500037ea161a4dbef0.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

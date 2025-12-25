@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Tools/TerrainArchitect.gd" id="1_arch"]
 [ext_resource type="Script" path="res://Tools/BiomePlacer.gd" id="2_place"]
-[ext_resource type="Script" path="res://Systems/WorldEnvironmentSetup.gd" id="3_env"]
+[ext_resource type="Script" path="res://Tools/TeleportGenerator.gd" id="4_tele"]
 
 [node name="WorldGenTools" type="Node3D"]
 
@@ -14,3 +14,6 @@ script = ExtResource("2_place")
 
 [node name="WorldEnvironmentSetup" type="Node" parent="."]
 script = ExtResource("3_env")
+
+[node name="TeleportGenerator" type="Node" parent="."]
+script = ExtResource("4_tele")

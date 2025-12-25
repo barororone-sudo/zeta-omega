@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bkujst4s1u43o"
+path="res://.godot/imported/tomato-slice.obj-8dca32b0f4d623f271de30336d316419.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tomato-slice.obj-8dca32b0f4d623f271de30336d316419.mesh"]
+
+source_file="res://Assets/3D/Items/kenney_food-kit/Models/OBJ format/tomato-slice.obj"
+dest_files=["res://.godot/imported/tomato-slice.obj-8dca32b0f4d623f271de30336d316419.mesh", "res://.godot/imported/tomato-slice.obj-8dca32b0f4d623f271de30336d316419.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

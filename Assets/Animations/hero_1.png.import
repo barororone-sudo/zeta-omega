@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpyiam8jjk6n5"
 path.s3tc="res://.godot/imported/hero_1.png-77697bdcafafc3d914694add6c13e55c.s3tc.ctex"
+path.etc2="res://.godot/imported/hero_1.png-77697bdcafafc3d914694add6c13e55c.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/hero_1.png"
-dest_files=["res://.godot/imported/hero_1.png-77697bdcafafc3d914694add6c13e55c.s3tc.ctex"]
+dest_files=["res://.godot/imported/hero_1.png-77697bdcafafc3d914694add6c13e55c.s3tc.ctex", "res://.godot/imported/hero_1.png-77697bdcafafc3d914694add6c13e55c.etc2.ctex"]
 
 [params]
 

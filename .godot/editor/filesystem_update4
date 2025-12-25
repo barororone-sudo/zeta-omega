@@ -1,3 +1,7 @@
-res://Entities/Player/Player.gd
-res://Tools/SafeGenerator.gd
-res://Entities/Enemies/Enemy.gd
+res://Tools/HTerrainGenerator.gd
+res://UI/MapSystem.gd
+res://AutoStart.tscn
+res://addons/phantom_camera/themes/theme.tres
+res://Tools/HTerrainArtisticPainter.gd
+res://_Core/GameManager.gd
+res://addons/zylann.hterrain/util/logger.gd

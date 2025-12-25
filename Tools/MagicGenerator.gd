@@ -61,11 +61,13 @@ func _scan_recursive(path: String):
 	while file_name != "":
 		if dir.current_is_dir():
 			if not (file_name == "." or file_name == ".." or file_name.begins_with(".")):
-				_scan_recursive(path.ends_with("/") and path + file_name or path + "/" + file_name)
+				var next_path = path + file_name if path.ends_with("/") else path + "/" + file_name
+				_scan_recursive(next_path)
 		else:
 			# Check extension
 			if file_name.ends_with(".glb") or file_name.ends_with(".gltf") or file_name.ends_with(".tscn"):
-				_categorize_asset(path.ends_with("/") and path + file_name or path + "/" + file_name)
+				var full_path = path + file_name if path.ends_with("/") else path + "/" + file_name
+				_categorize_asset(full_path)
 		
 		file_name = dir.get_next()
 

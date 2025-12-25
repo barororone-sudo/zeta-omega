@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://4n1o4bwx7mwt"
 path.s3tc="res://.godot/imported/Heraklios By A_0.png-3807c726548046c1f60b989a78c9f67e.s3tc.ctex"
+path.etc2="res://.godot/imported/Heraklios By A_0.png-3807c726548046c1f60b989a78c9f67e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/Pro Sword and Shield Pack/Heraklios By A_0.png"
-dest_files=["res://.godot/imported/Heraklios By A_0.png-3807c726548046c1f60b989a78c9f67e.s3tc.ctex"]
+dest_files=["res://.godot/imported/Heraklios By A_0.png-3807c726548046c1f60b989a78c9f67e.s3tc.ctex", "res://.godot/imported/Heraklios By A_0.png-3807c726548046c1f60b989a78c9f67e.etc2.ctex"]
 
 [params]
 

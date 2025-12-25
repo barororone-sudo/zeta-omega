@@ -13,13 +13,18 @@ config_version=5
 config/name="Zeta Omega RPG"
 config/description="RPG Open World Project"
 run/main_scene="res://AutoStart.tscn"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*res://_Core/GameManager.gd"
 BiomeManager="*res://Systems/BiomeManager.gd"
+PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
+BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
+BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
+DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+MapManager="*res://Systems/Map/MapManager.gd"
 
 [display]
 
@@ -29,7 +34,7 @@ window/size/mode=2
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/proton_scatter/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg", "res://addons/dialogue_manager/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/proton_scatter/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg", "res://addons/orchestrator/plugin.cfg")
 
 [input]
 
@@ -63,4 +68,27 @@ attack={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
 ]
+}
+
+[physics]
+
+3d/physics_engine="JoltPhysics3D"
+common/physics_interpolation=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
+environment/glow/upscale_mode=0
+vulkan/rendering/back_end.mobile=1
+shadows/directional_shadow/soft_shadow_filter_quality=0
+shadows/positional_shadow/soft_shadow_filter_quality=0
+quality/shadows/max_distance=80.0
+quality/shadows/atlas_size=512
+
+[shader_globals]
+
+player_position={
+"type": "vec3",
+"value": Vector3(0, 0, 0)
 }

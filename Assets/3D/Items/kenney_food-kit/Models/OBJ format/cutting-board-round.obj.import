@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://4cee7x2w4fwo"
+path="res://.godot/imported/cutting-board-round.obj-e0c6d42d0a01c393f1a30a4adc4af004.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cutting-board-round.obj-e0c6d42d0a01c393f1a30a4adc4af004.mesh"]
+
+source_file="res://Assets/3D/Items/kenney_food-kit/Models/OBJ format/cutting-board-round.obj"
+dest_files=["res://.godot/imported/cutting-board-round.obj-e0c6d42d0a01c393f1a30a4adc4af004.mesh", "res://.godot/imported/cutting-board-round.obj-e0c6d42d0a01c393f1a30a4adc4af004.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

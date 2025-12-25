@@ -14,6 +14,8 @@ var viewport: SubViewport
 var map_camera: Camera3D
 var map_texture_rect: TextureRect
 var player_arrow: Node2D # Notre flèche
+var update_timer: float = 0.0
+const UPDATE_INTERVAL: float = 1.0 / 15.0 # 15 FPS
 
 # ETAT
 var is_fullscreen = false
@@ -49,7 +51,7 @@ func _ready() -> void:
 	viewport = SubViewport.new()
 	viewport.name = "MapViewport"
 	viewport.size = Vector2(512, 512)
-	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED # We will update manually
 	viewport.world_3d = get_viewport().world_3d 
 	add_child(viewport)
 	
@@ -70,6 +72,9 @@ func _ready() -> void:
 	map_env.ambient_light_energy = 1.0
 	map_env.fog_enabled = false # CRUCIAL: Pas de brouillard !
 	map_camera.environment = map_env
+	
+	# FIX: Disable physics interpolation for Minimap Camera to stop warnings
+	map_camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	
 	viewport.add_child(map_camera)
 	
@@ -138,6 +143,9 @@ func _on_panel_gui_input(event: InputEvent):
 				drag_start_offset = map_offset_accum
 			else:
 				is_dragging = false
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			# RIGHT CLICK = RESET OFFSET (Recenter on Player)
+			map_offset_accum = Vector2.ZERO
 	
 	if event is InputEventMouseMotion and is_dragging:
 		var delta_mouse = event.global_position - drag_start_mouse
@@ -157,22 +165,19 @@ func _on_panel_gui_input(event: InputEvent):
 
 # --- LOOP PRINCIPAL ---
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	update_timer += delta
+	if update_timer >= UPDATE_INTERVAL:
+		update_timer = 0.0
+		# MANUALLY RENDER ONE FRAME
+		viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+		
+		# MISE A JOUR DES ICONES
+		var icons = panel.get_node_or_null("IconsOverlay")
+		if icons: icons.queue_redraw()
+	
 	var player = get_tree().get_first_node_in_group("Player")
 	if not player: return
-	
-	# 1. Mise à jour Caméra
-	# EN MODE MINIMAP : Toujours centré sur le joueur (Ignorer l'offset de drag)
-	# EN MODE FULLSCREEN : Joueur + Offset
-	var target_x = player.global_position.x
-	var target_z = player.global_position.z
-	
-	if is_fullscreen:
-		target_x += map_offset_accum.x
-		target_z += map_offset_accum.y
-		
-	map_camera.global_position.x = target_x
-	map_camera.global_position.z = target_z
 	
 	# 2. Update Fog Shader Center
 	if fog_shader:
@@ -187,24 +192,12 @@ func _process(_delta: float) -> void:
 	if icons: icons.queue_redraw()
 	
 	# 4. Mise à jour Flèche (Rotation)
-	# En mode Fullscreen + Déplacement, on garde la flèche au centre RELATIF au joueur
-	# MAIS ATTENTION: Si on déplace la map, le joueur n'est plus au centre du Panel
-	# Calculez la position du joueur sur la map par rapport au centre de la vue caméra
-	
-	# Offset Pixel = (Différence Monde) * Ratio (Pixels / Mètres)
-	# Ratio = TailleViewport / TailleCaméra
-	var ratio = size.x / map_camera.size # ex: 512px / 200m = 2.5 px/m
-	
-	# Position relative du joueur par rapport au centre de la caméra
-	# Note: map_camera est décalé de map_offset_accum par rapport au joueur
-	# map_cam.pos = player.pos + offset
-	# player.pos - map_cam.pos = -offset
-	
+	# ... (Position updated in _physics_process for camera stability)
+	var ratio = size.x / map_camera.size 
 	var rel_x = -map_offset_accum.x
 	var rel_z = -map_offset_accum.y 
-	
 	var screen_offset_x = rel_x * ratio
-	var screen_offset_y = rel_z * ratio # Le Z 3D devient Y écran positif vers le bas
+	var screen_offset_y = rel_z * ratio
 	
 	if player_arrow:
 		# Rotation
@@ -215,6 +208,21 @@ func _process(_delta: float) -> void:
 		
 		# Position (Centre Panel + Décalage inversé du Drag)
 		player_arrow.position = (size / 2.0) + Vector2(screen_offset_x, screen_offset_y)
+
+func _physics_process(_delta: float) -> void:
+	var player = get_tree().get_first_node_in_group("Player")
+	if not player: return
+	
+	# 1. Mise à jour Caméra (In Physics Process for stability with Interpolation ON)
+	var target_x = player.global_position.x
+	var target_z = player.global_position.z
+	
+	if is_fullscreen:
+		target_x += map_offset_accum.x
+		target_z += map_offset_accum.y
+		
+	map_camera.global_position.x = target_x
+	map_camera.global_position.z = target_z
 
 # --- SETUP & HELPERS ---
 
@@ -341,6 +349,33 @@ func _on_icons_draw():
 		icons_node.draw_circle(screen_pos, 4.0, col)
 		icons_node.draw_circle(screen_pos, 6.0, col * Color(1,1,1,0.3)) # Glow
 
+	# DRAW TELEPORT POINTS
+	# (Assuming GameManager has 'teleport_points' array)
+	var points = get_tree().get_nodes_in_group("TeleportPoints")
+	for p in points:
+		var p_pos = Vector2(p.global_position.x, p.global_position.z)
+		var rel = p_pos - cam_pos
+		var screen_pos = (screen_size / 2.0) + Vector2(rel.x, rel.y) * ratio
+		
+		if not panel.get_rect().has_point(panel.global_position + screen_pos): continue
+		
+		# VISIBILITY LOGIC
+		# 1. If Activated -> ALWAYS VISIBLE (Blue)
+		# 2. If Not Activated -> Visible ONLY if Revealed (Red)
+		
+		var is_revealed = GameManager.is_zone_revealed(p.global_position)
+		var is_active = p.is_active
+		
+		if not is_active and not is_revealed:
+			continue # Hidden in Fog
+			
+		var col = Color(1, 0, 0) # Red (Inactive)
+		if is_active: col = Color(0, 0.6, 1) # Blue (Active)
+		
+		# Draw Dot
+		icons_node.draw_circle(screen_pos, 3.0, col)
+
+
 func toggle_map_mode():
 	is_fullscreen = !is_fullscreen
 	
@@ -351,7 +386,8 @@ func toggle_map_mode():
 	
 	# Reset offset when closing? Non, on garde la position ou on reset, au choix.
 	# Reset pour retrouver le joueur en réouvrant:
-	if is_fullscreen: map_offset_accum = Vector2.ZERO 
+	# if is_fullscreen: map_offset_accum = Vector2.ZERO # OLD BUGGY
+ 
 	
 	if is_fullscreen:
 		# --- MODE FULLSCREEN (Centre) ---
@@ -377,6 +413,9 @@ func toggle_map_mode():
 		
 	else:
 		# --- MODE MINIMAP (Coin Haut Droit) ---
+		# FIX: RECENTER ON PLAYER WHEN CLOSING MAP
+		map_offset_accum = Vector2.ZERO
+		
 		var vp_size = get_viewport_rect().size
 		var target_pos = Vector2(vp_size.x - minimap_size.x - minimap_margin, minimap_margin)
 		

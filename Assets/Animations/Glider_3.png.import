@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cofbbjrpi7aow"
 path.s3tc="res://.godot/imported/Glider_3.png-bb0bcb7c6025347a9030d8054d25a72b.s3tc.ctex"
+path.etc2="res://.godot/imported/Glider_3.png-bb0bcb7c6025347a9030d8054d25a72b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/Glider_3.png"
-dest_files=["res://.godot/imported/Glider_3.png-bb0bcb7c6025347a9030d8054d25a72b.s3tc.ctex"]
+dest_files=["res://.godot/imported/Glider_3.png-bb0bcb7c6025347a9030d8054d25a72b.s3tc.ctex", "res://.godot/imported/Glider_3.png-bb0bcb7c6025347a9030d8054d25a72b.etc2.ctex"]
 
 [params]
 

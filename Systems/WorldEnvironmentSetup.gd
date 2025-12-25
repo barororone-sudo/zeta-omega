@@ -42,7 +42,7 @@ func setup_environment():
 	# Couleurs Style Zelda/Ghibli
 	sky_mat.sky_top_color = Color("0077ff") # Bleu Azur Profond
 	sky_mat.sky_horizon_color = Color("aaccff") # Bleu très clair / Blanc
-	sky_mat.ground_bottom_color = Color("222222") # Sol sombre
+	sky_mat.ground_bottom_color = Color("404050") # Sol légèrement bleuté (Ambient boost)
 	sky_mat.ground_horizon_color = Color("aaccff")
 	
 	# Soleil dans le ciel
@@ -51,10 +51,10 @@ func setup_environment():
 	
 	# 2. FOG (Volumetric)
 	env.volumetric_fog_enabled = true
-	env.volumetric_fog_density = 0.01 # Très léger, juste pour la profondeur
-	env.volumetric_fog_albedo = Color("ddeeff") # Légèrement bleuté
+	env.volumetric_fog_density = 0.012 # Légèrement plus dense
+	env.volumetric_fog_albedo = Color("ddeeff") 
 	env.volumetric_fog_emission = Color.BLACK
-	env.volumetric_fog_detail_spread = 2.0 # Plus lisse
+	env.volumetric_fog_detail_spread = 2.0 
 	
 	# Désactiver le brouillard standard pour éviter le conflit ou le double emploi
 	env.fog_enabled = false 
@@ -63,12 +63,12 @@ func setup_environment():
 	
 	# Tonemap (Vital pour les couleurs)
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 1.0
+	env.tonemap_exposure = 1.1 # Plus lumineux
 	
 	# SSAO (Ombres de contact)
 	env.ssao_enabled = true
 	env.ssao_radius = 2.0
-	env.ssao_intensity = 3.0
+	env.ssao_intensity = 5.0 # Pop des détails
 	env.ssao_power = 1.5
 	
 	# Glow (Bloom)
@@ -104,7 +104,7 @@ func setup_light():
 	
 	# Couleur
 	sun.light_color = Color("fff8e0") # Blanc légèrement chaud
-	sun.light_energy = 1.2 # Un peu plus fort pour l'effet "éclatant"
+	sun.light_energy = 1.6 # Un peu plus fort pour l'effet "éclatant"
 	
 	print("   ✅ Soleil configuré.")
 

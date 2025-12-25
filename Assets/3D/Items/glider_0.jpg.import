@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyk5lhn4sruah"
 path.s3tc="res://.godot/imported/glider_0.jpg-8b3adb5e879d4725f298325cae6d737b.s3tc.ctex"
+path.etc2="res://.godot/imported/glider_0.jpg-8b3adb5e879d4725f298325cae6d737b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/3D/Items/glider_0.jpg"
-dest_files=["res://.godot/imported/glider_0.jpg-8b3adb5e879d4725f298325cae6d737b.s3tc.ctex"]
+dest_files=["res://.godot/imported/glider_0.jpg-8b3adb5e879d4725f298325cae6d737b.s3tc.ctex", "res://.godot/imported/glider_0.jpg-8b3adb5e879d4725f298325cae6d737b.etc2.ctex"]
 
 [params]
 

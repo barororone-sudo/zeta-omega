@@ -3,16 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdydv4tt1atsj"
-path.s3tc="res://.godot/imported/Grass.png-f10a6ecbcba14822816b7e2f94fd4393.s3tc.ctex"
+path.s3tc="res://.godot/imported/Grass.png-6c171ae9b31b5e5a84ec28159031a449.s3tc.ctex"
+path.etc2="res://.godot/imported/Grass.png-6c171ae9b31b5e5a84ec28159031a449.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://Assets/3D/Nature/Stylized Nature MegaKit[Standard]/textures/Grass.png"
-dest_files=["res://.godot/imported/Grass.png-f10a6ecbcba14822816b7e2f94fd4393.s3tc.ctex"]
+source_file="res://Assets/3D/Nature/Stylized Nature MegaKit[Standard]/Textures/Grass.png"
+dest_files=["res://.godot/imported/Grass.png-6c171ae9b31b5e5a84ec28159031a449.s3tc.ctex", "res://.godot/imported/Grass.png-6c171ae9b31b5e5a84ec28159031a449.etc2.ctex"]
 
 [params]
 

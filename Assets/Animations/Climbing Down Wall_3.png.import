@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dryonpqm8furc"
 path.s3tc="res://.godot/imported/Climbing Down Wall_3.png-79d0630ca87a89355bcdf752eb502979.s3tc.ctex"
+path.etc2="res://.godot/imported/Climbing Down Wall_3.png-79d0630ca87a89355bcdf752eb502979.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Animations/Climbing Down Wall_3.png"
-dest_files=["res://.godot/imported/Climbing Down Wall_3.png-79d0630ca87a89355bcdf752eb502979.s3tc.ctex"]
+dest_files=["res://.godot/imported/Climbing Down Wall_3.png-79d0630ca87a89355bcdf752eb502979.s3tc.ctex", "res://.godot/imported/Climbing Down Wall_3.png-79d0630ca87a89355bcdf752eb502979.etc2.ctex"]
 
 [params]
 
